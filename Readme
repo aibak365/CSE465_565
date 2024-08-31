@@ -1,1 +1,9 @@
 For Homeworks of comperative language
+Please note that on the image of the results of file: .\prog1.zpm
+the code of Zpm+- was like this , so that the result is 4
+A = 2 ;
+B = 2 ;
+A *= B ;
+PRINT A ;
+
+Thanks in advance for hard work!
