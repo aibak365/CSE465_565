@@ -30,6 +30,7 @@
     )
   )
  )
+
 ;An example of line function
 (mydisplay (negatives '())) ; -> ()
 (mydisplay (negatives '(-1))) ; -> (-1)
