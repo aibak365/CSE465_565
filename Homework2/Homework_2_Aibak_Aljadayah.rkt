@@ -58,3 +58,23 @@
 (mydisplay (struct '(a b c (c a b)) '(1 2 3 (a b c) 0))) ; -> #f
 (line "struct")
 ;End of example
+
+(define (minAndMax lst)
+  (define (helper lst min max)
+    (cond
+      ((null? lst) (list min max))
+      ((< (car lst) min) (helper (cdr lst) (car lst) max))
+      ((> (car lst) max) (helper (cdr lst) min (car lst)))
+      (else (helper (cdr lst) min max))
+    )
+  )
+  (helper (cdr lst) (car lst) (car lst))
+)
+
+;An example of line function
+(line "minAndMax")
+(mydisplay (minAndMax '(1 2 -3 4 2))) ; -> (-3 4)
+(mydisplay (minAndMax '(1))) ; -> (1 1)
+(line "minAndMax")
+;End of example
+
