@@ -95,4 +95,7 @@
 (mydisplay (flatten '((a b) (c (d) e) f)))  ; -> (a b c d e f)
 (line "flatten")
 ; ---------------------------------------------
+;End of example
+
+
 
