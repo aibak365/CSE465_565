@@ -97,5 +97,48 @@
 ; ---------------------------------------------
 ;End of example
 
+(require "zipcodes.scm")
+
+;; Now you can use the zipcodes list
+(display (cadadr zipcodes))
+(newline)
+
+; Returns the first latitude and longitude of a particular zip code.
+; if there are multiple latitude and longitude pairs for the same zip code,
+; the function should only return the first pair. e.g. (53.3628 -167.5107)
+; zipcode -- 5 digit integer
+; zips -- the zipcode DB- You MUST pass the 'zipcodes' function
+; from the 'zipcodes.scm' file for this. You can just call 'zipcodes' directly
+; as shown in the sample example
+(define (getLatLon zipcode zips)
+        
+        (cond
+        
+         ((= zipcode (caar (cdr zips))) (list zipcode (cddr(cddadr zips))))
+         ((getLatLon zipcode (cdr zips)))
+         )
+	
+)
+
+(line "getLatLon")
+(mydisplay (getLatLon 45056 zipcodes))
+(line "getLatLon")
+; ---------------------------------------------
+
+
+; Returns a list of all the place names common to two states.
+; state1 -- the first state to look for
+; state2 -- the second state to look for
+; zips -- the zipcode DB
+(define (getCommonPlaces state1 state2 zips)
+  ; (caddar (cdr zips))
+  (list state1 state2)
+)
+
+(line "getCommonPlaces")
+(mydisplay (getCommonPlaces "OH" "MI" zipcodes))
+(line "getCommonPlaces")
+; ---------------------------------------------
+
 
 
