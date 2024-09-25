@@ -272,12 +272,14 @@
     (else (apply-filters x (cdr filters)))))
 
 ; Test cases
+(display "filterlist--------------------------------------------\n")
 (display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS?)))
 (newline)
 (display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS? even?)))
 (newline)
 (display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS? even? LARGE?)))
 (newline)
+(display "filterlist--------------------------------------------\n")
 ; ---------------------------------------------
 
 ; #### Only for Graduate Students ####
