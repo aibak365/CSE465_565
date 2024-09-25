@@ -31,12 +31,13 @@
   )
  )
 
-;An example of line function
-(mydisplay (negatives '())) ; -> ()
-(mydisplay (negatives '(-1))) ; -> (-1)
-(mydisplay (negatives '(1 -1 2 3 4 -4 5))) ; -> (-1 -4)
-(mydisplay (negatives '(1 1 2 3 4 4 5))) ; -> ()
-;End of example
+(line "negatives")
+(mydisplay (negatives '()))  ; -> ()
+(mydisplay (negatives '(-1)))  ; -> (-1)
+(mydisplay (negatives '(-1 1 2 3 4 -4 5)))  ; -> (-1 -4)
+(mydisplay (negatives '(1 1 2 3 4 4 5)))  ; -> ()
+(line "negatives")
+; ---------------------------------------------
 
 (define (struct lst1 lst2)
   (cond
@@ -100,8 +101,12 @@
 (require "zipcodes.scm")
 
 ;; Now you can use the zipcodes list
+(display "---------test---------\n")
+(display "just to figure out how to get the place\n")
 (display (cadadr zipcodes))
 (newline)
+(display "---------test---------\n")
+
 
 ; Returns the first latitude and longitude of a particular zip code.
 ; if there are multiple latitude and longitude pairs for the same zip code,
@@ -130,11 +135,13 @@
 ; state1 -- the first state to look for
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
-; helper functions 
+; helper functions
+(display "---------test---------\n")
 (caadr  zipcodes)
 (cons '1 '(1 2 3))
 (display "just to check how to car and cdr the zips ...............")
 (newline)
+(display "---------test---------\n")
 
 (define (getPlaces state zips)
   (cond
@@ -142,6 +149,7 @@
     ((and (pair? (car zips)) (equal? state (caddr (car zips))))
      (cons (cadr (car zips)) (getPlaces state (cdr zips))))
     (else (getPlaces state (cdr zips)))))
+(display "---------test---------\n")
 ;; Test cases
 (define zips '((2 "place51" texas) (1 "place1" ohio) (2 "place2" ohio) (3 "place3" texas) (4 "place4" california) (2 "place2" ohio) (2 "place2" ohio) (5 "place5" california) (2 "place2" ohio)))
 (display (getPlaces 'ohio zips)) ; Expected output: _
@@ -151,11 +159,7 @@
 (display (getPlaces 'california zips)) ; Expected output: 
 (newline)
 (display (getPlaces 'florida zips)) ; Expected output: ()
-
-(newline)
-(display "---------------------------------------------------++++++++++++++++++++++++++++++++++++\n")
-(newline)
-(display "______________________________________________________________________________________")
+(display "---------test---------\n")
 (define (remove-duplicates lst)
   (cond
     ((null? lst) '())
@@ -190,23 +194,24 @@
       (else
        (cons (car remaining) (helper (cons (car remaining) seen) (cdr remaining))))))
   (helper '() lst))
+(display "---------test---------\n")
 (display (keepUnique (getPlaces 'ohio zips))) ; as i see is working
 (newline)
 (display "for testing purpose --------------------------------------------\n")
 (newline)
+(display "---------test---------\n")
 
-(newline)
 (define (getZips state zips)
   (cond
     ((null? zips) '())
     ((and (pair? (car zips)) (string=? state (caddr (car zips))))
      (cons (caar zips) (getZips state (cdr zips))))
     (else (getZips state (cdr zips)))))
-
+(display "---------test---------\n")
 ;; Example usage:
 (keepUnique '(a b a a a a a c a a a b a c a a c a c a))
 ;; Output: (a b c)
-(display "for test purpose __________________________________________________________\n")
+(display "---------test---------\n")
 
 
 (define (zipCount state zips)
@@ -218,7 +223,7 @@
 (line "zipCount")
 ; ---------------------------------------------
 
-
+(display "---------test---------\n")
 ; Some sample predicates
 (define (POS? x) (> x 0))
 (define (NEG? x) (< x 0))
@@ -272,7 +277,7 @@
 
 ;; Example states
 (define states '(ohio texas california))
-
+(display "---------test---------\n")
 ;; Test cases
 (display (placesForAllState states zips)) ; Expected output: ("place1" "place2" "place3" "place4" "place5")
 (newline)
@@ -297,13 +302,13 @@
                 (= (count-item item lst) state-length))
               (remove-duplicates lst))))
   (filter-occurrences lst states))
-
+(display "---------test---------\n")
 ;; Example usage:
 (define my-list '(a b c a b a c c d d d))
 (count-occurrences my-list states)
 (newline)
 ;end of test
-
+(display "---------test---------\n")
 ;(placesForAllState '("OH" "MI" "PA") zipcodes); i checked the last few strings of PA it looks working :) finally
 (newline)
 
@@ -346,7 +351,7 @@
                   (sin (/ dlon 2)) (sin (/ dlon 2)))))
          (c (* 2 (atan2 (sqrt a) (sqrt (- 1 a))))))
     (* r c)))
-
+(display "---------test---------\n")
 (display (distance 40.7128 -74.0060 34.0522 -118.2437)) ; New York to Los Angeles
 
 (newline)
@@ -354,6 +359,7 @@
 
 (caddr (cdddr '(63441 "Frankford" "MO" "Pike" 39.4892 -91.3031)))
 ;just to check if i am picking correctly or not
+(display "---------test---------\n")
 (define (findL zip zips)
   (cond
   ((null? zips) '())
