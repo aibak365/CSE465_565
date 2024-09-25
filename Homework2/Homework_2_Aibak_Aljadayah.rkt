@@ -107,7 +107,23 @@
 (newline)
 (display "---------test---------\n")
 
+; The paramters are two lists. The result should contain the cross product
+; between the two lists: 
+; The inputs '(1 2) and '(a b c) should return a single list:
+; ((1 a) (1 b) (1 c) (2 a) (2 b) (2 c))
+; lst1 & lst2 -- two flat lists.
 
+(define (crossproduct lst1 lst2)
+  (if (null? lst1)
+      '()
+      (append (map (lambda (x) (cons (car lst1) (list x))) lst2)
+              (crossproduct (cdr lst1) lst2))))
+
+(line "crossproduct")
+(mydisplay (crossproduct '(1 2) '(a b c)))
+(line "crossproduct")
+
+; ---------------------------------------------
 ; Returns the first latitude and longitude of a particular zip code.
 ; if there are multiple latitude and longitude pairs for the same zip code,
 ; the function should only return the first pair. e.g. (53.3628 -167.5107)
