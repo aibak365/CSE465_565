@@ -130,15 +130,45 @@
 ; state1 -- the first state to look for
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
+; helper functions 
+(car (cddadr zipcodes))
+(cons '1 '(1 2 3))
+(display "just to check how to car and cdr the zips ...............")
+(newline)
+
+(define (getPlaces state zips)
+  (cond
+    ((null? zips) '())
+    ((and (pair? (car zips)) (equal? state (caddr (car zips))))
+     (cons (cadr (car zips)) (getPlaces state (cdr zips))))
+    (else (getPlaces state (cdr zips)))))
+(define (remove-duplicates lst)
+  (cond
+    ((null? lst) '())
+    ((member (car lst) (cdr lst)) (remove-duplicates (cdr lst)))
+    (else (cons (car lst) (remove-duplicates (cdr lst))))))
+; I got the remove-duplicates using ChatGpt
+(define (duplicate list1 list2)
+  (remove-duplicates
+   (cond
+     ((null? list1) '())
+     ((member (car list1) list2) (cons (car list1) (duplicate (cdr list1) list2)))
+     (else (duplicate (cdr list1) list2)))))
+
+
 (define (getCommonPlaces state1 state2 zips)
-  ; (caddar (cdr zips))
-  (list state1 state2)
+	(duplicate (getPlaces "OH" zipcodes) (getPlaces "MI" zipcodes))
 )
 
 (line "getCommonPlaces")
 (mydisplay (getCommonPlaces "OH" "MI" zipcodes))
 (line "getCommonPlaces")
-; ---------------------------------------------
+
+
+
+
+
+
 
 
 
