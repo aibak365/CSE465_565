@@ -142,6 +142,20 @@
     ((and (pair? (car zips)) (equal? state (caddr (car zips))))
      (cons (cadr (car zips)) (getPlaces state (cdr zips))))
     (else (getPlaces state (cdr zips)))))
+;; Test cases
+(define zips '((2 "place51" texas) (1 "place1" ohio) (2 "place2" ohio) (3 "place3" texas) (4 "place4" california) (2 "place2" ohio) (2 "place2" ohio) (5 "place5" california) (2 "place2" ohio)))
+(display (getPlaces 'ohio zips)) ; Expected output: _
+(newline)
+(display (getPlaces 'texas zips)) ; Expected output: _
+(newline)
+(display (getPlaces 'california zips)) ; Expected output: 
+(newline)
+(display (getPlaces 'florida zips)) ; Expected output: ()
+
+(newline)
+(display "---------------------------------------------------++++++++++++++++++++++++++++++++++++\n")
+(newline)
+(display "______________________________________________________________________________________")
 (define (remove-duplicates lst)
   (cond
     ((null? lst) '())
@@ -157,9 +171,9 @@
 
 
 (define (getCommonPlaces state1 state2 zips)
-	(duplicate (getPlaces "OH" zipcodes) (getPlaces "MI" zipcodes))
+	(duplicate (getPlaces state1 zipcodes) (getPlaces state2 zipcodes))
 )
-
+(newline)
 (line "getCommonPlaces")
 (mydisplay (getCommonPlaces "OH" "MI" zipcodes))
 (line "getCommonPlaces")
@@ -176,13 +190,23 @@
       (else
        (cons (car remaining) (helper (cons (car remaining) seen) (cdr remaining))))))
   (helper '() lst))
+(display (keepUnique (getPlaces 'ohio zips))) ; as i see is working
+(newline)
+(display "for testing purpose --------------------------------------------\n")
+(newline)
 
+(newline)
 (define (getZips state zips)
   (cond
     ((null? zips) '())
     ((and (pair? (car zips)) (string=? state (caddr (car zips))))
      (cons (caar zips) (getZips state (cdr zips))))
     (else (getZips state (cdr zips)))))
+
+;; Example usage:
+(keepUnique '(a b a a a a a c a a a b a c a a c a c a))
+;; Output: (a b c)
+(display "for test purpose __________________________________________________________\n")
 
 
 (define (zipCount state zips)
@@ -193,6 +217,163 @@
 (mydisplay (zipCount "OH" zipcodes))
 (line "zipCount")
 ; ---------------------------------------------
+
+
+; Some sample predicates
+(define (POS? x) (> x 0))
+(define (NEG? x) (< x 0))
+(define (LARGE? x) (>= (abs x) 10))
+(define (SMALL? x) (not (LARGE? x)))
+
+; Returns a list of items that satisfy a set of predicates.
+; For example (filterList '(1 2 3 4 100) '(EVEN?)) should return the even numbers (2 4 100)
+; (filterList '(1 2 3 4 100) '(EVEN? SMALL?)) should return (2 4)
+; lst -- flat list of items
+; filters -- list of predicates to apply to the individual elements
+
+(define (filterList lst filters)
+  (cond
+    ((null? lst) '())
+    ((null? filters) lst)
+    (else (filterList-helper lst filters))))
+
+(define (filterList-helper lst filters)
+  (cond
+    ((null? lst) '())
+    ((apply-filters (car lst) filters)
+     (cons (car lst) (filterList-helper (cdr lst) filters)))
+    (else (filterList-helper (cdr lst) filters))))
+
+(define (apply-filters x filters)
+  (cond
+    ((null? filters) #t)
+    ((not ((car filters) x)) #f)
+    (else (apply-filters x (cdr filters)))))
+
+; Test cases
+(display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS?)))
+(newline)
+(display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS? even?)))
+(newline)
+(display (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS? even? LARGE?)))
+(newline)
+; ---------------------------------------------
+
+; #### Only for Graduate Students ####
+; Returns a list of all the place names common to a set of states.
+; states -- is list of state names
+; zips -- the zipcode DB
+
+(define (placesForAllState states zips)
+  (cond
+    ((null? states) '())
+    (else (append (keepUnique (getPlaces (car states) zips))
+                  (placesForAllState (cdr states) zips)))))
+
+;; Example states
+(define states '(ohio texas california))
+
+;; Test cases
+(display (placesForAllState states zips)) ; Expected output: ("place1" "place2" "place3" "place4" "place5")
+(newline)
+(display (placesForAllState '(ohio) zips)) ; Expected output: ("place1" "place2")
+(newline)
+(display (placesForAllState '(texas) zips)) ; Expected output: ("place3")
+(newline)
+(display (placesForAllState '(california) zips)) ; Expected output: ("place4" "place5")
+(newline)
+(display (placesForAllState '() zips)) ; Expected output: ()
+(newline)
+(display "for testing purpose +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+;end of the test
+
+;(placesForAllState '("PA" "OH" "MI") zipcodes)
+(define (count-occurrences lst states)
+  (define (count-item item lst)
+    (length (filter (lambda (x) (equal? x item)) lst)))
+  (define (filter-occurrences lst states)
+    (let ((state-length (length states)))
+      (filter (lambda (item)
+                (= (count-item item lst) state-length))
+              (remove-duplicates lst))))
+  (filter-occurrences lst states))
+
+;; Example usage:
+(define my-list '(a b c a b a c c d d d))
+(count-occurrences my-list states)
+(newline)
+;end of test
+
+;(placesForAllState '("OH" "MI" "PA") zipcodes); i checked the last few strings of PA it looks working :) finally
+(newline)
+
+(define (getCommonPlaces2 states zips)
+	(count-occurrences (placesForAllState states zips) states)
+)
+
+(line "getCommonPlaces2")
+(mydisplay (getCommonPlaces2 '("OH" "MI" "PA") zipcodes))
+(line "getCommonPlaces2")
+; ---------------------------------------------
+
+
+
+
+
+; #### Only for Graduate Students ####
+; Returns the distance between two zip codes in "meters".
+; Use lat/lon. Do some research to compute this.
+; You can find some info here: https://www.movable-type.co.uk/scripts/latlong.html
+; zip1 & zip2 -- the two zip codes in question.
+; zips -- zipcode DB
+;I used chatgpt to generate (atan2) this cuz i wasn't sure what is atan2 exactly, i hope it is the right equation
+(define (atan2 y x)
+  (cond ((and (= x 0) (> y 0)) (/ pi 2))
+        ((and (= x 0) (< y 0)) (- (/ pi 2)))
+        ((= y 0) (if (>= x 0) 0 pi))
+        ((> x 0) (atan (/ y x)))
+        ((< x 0) (if (>= y 0) (+ (atan (/ y x)) pi) (- (atan (/ y x)) pi)))))
+
+(define (distance lat1 lon1 lat2 lon2)
+  (let* ((pi 3.141592653589793)
+         (r 6371000) ; Earth's radius in meters
+         (dlat (* pi (- lat2 lat1) (/ 1 180))) ; Convert delta lat to radians
+         (dlon (* pi (- lon2 lon1) (/ 1 180))) ; Convert delta lon to radians
+         (lat1 (* pi lat1 (/ 1 180))) ; Convert lat1 to radians
+         (lat2 (* pi lat2 (/ 1 180))) ; Convert lat2 to radians
+         (a (+ (* (sin (/ dlat 2)) (sin (/ dlat 2)))
+               (* (cos lat1) (cos lat2)
+                  (sin (/ dlon 2)) (sin (/ dlon 2)))))
+         (c (* 2 (atan2 (sqrt a) (sqrt (- 1 a))))))
+    (* r c)))
+
+(display (distance 40.7128 -74.0060 34.0522 -118.2437)) ; New York to Los Angeles
+
+(newline)
+;testing if distance working
+
+(caddr (cdddr '(63441 "Frankford" "MO" "Pike" 39.4892 -91.3031)))
+;just to check if i am picking correctly or not
+(define (findL zip zips)
+  (cond
+  ((null? zips) '())
+  ((equal? (caadr zips) zip)
+   (list (caddr(cddadr zips)) (cadddr(cddadr zips)))
+   )
+  ((findL zip (cdr zips)))
+  )
+)
+
+(findL 45056 zipcodes)
+(define (getDistanceBetweenZipCodes zip1 zip2 zips)
+  (distance (car (findL zip1 zipcodes)) (cadr (findL zip1 zipcodes)) (car (findL zip2 zipcodes)) (cadr (findL zip2 zipcodes)))
+)
+
+(line "getDistanceBetweenZipCodes")
+(mydisplay (getDistanceBetweenZipCodes 45056 48122 zipcodes))
+(line "getDistanceBetweenZipCodes")
+; ---------------------------------------------
+
 
 
 
