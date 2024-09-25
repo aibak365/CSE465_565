@@ -131,7 +131,7 @@
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
 ; helper functions 
-(car (cddadr zipcodes))
+(caadr  zipcodes)
 (cons '1 '(1 2 3))
 (display "just to check how to car and cdr the zips ...............")
 (newline)
@@ -163,6 +163,36 @@
 (line "getCommonPlaces")
 (mydisplay (getCommonPlaces "OH" "MI" zipcodes))
 (line "getCommonPlaces")
+
+; Returns the number of zipcode entries for a particular state.
+; state -- state
+; zips -- zipcode DBz
+(define (keepUnique lst)
+  (define (helper seen remaining)
+    (cond
+      ((null? remaining) '())
+      ((member (car remaining) seen)
+       (helper seen (cdr remaining)))
+      (else
+       (cons (car remaining) (helper (cons (car remaining) seen) (cdr remaining))))))
+  (helper '() lst))
+
+(define (getZips state zips)
+  (cond
+    ((null? zips) '())
+    ((and (pair? (car zips)) (string=? state (caddr (car zips))))
+     (cons (caar zips) (getZips state (cdr zips))))
+    (else (getZips state (cdr zips)))))
+
+
+(define (zipCount state zips)
+ (length (keepUnique (getZips state zips)))
+)
+
+(line "zipCount")
+(mydisplay (zipCount "OH" zipcodes))
+(line "zipCount")
+; ---------------------------------------------
 
 
 
