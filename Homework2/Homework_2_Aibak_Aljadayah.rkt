@@ -4,6 +4,15 @@
   (newline)
   )
 
+
+
+;IMPORTNAT PLEASE CONSIDER
+; I add on the zipcodes file an empty list to the list, may or not may to affect the results of my code
+;;;;
+;;;;
+;;;;
+;;;;
+
 ;An example of mydisplay function
 (mydisplay 3)
 ;End of example
