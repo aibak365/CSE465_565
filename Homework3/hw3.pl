@@ -73,7 +73,7 @@ elementExist(E,[Head|Tail]) :- elementExist(E,Tail).
 % Determine the reverse list of integer numbers
 % reverse(LST, REVLST).
 
-reverse([], []). 
+everse([], []). 
 reverse([Head|Tail], REVLST) :- 
     reverse(Tail, RevT), 
     append(RevT, [Head], REVLST).
@@ -109,7 +109,6 @@ collectOneDigits([Head|Tail], NewLst) :-
 %         location(Z, _, S, _, _, _). 
 % Determine all places based on given state and zipcode.
 % getStateInfo(PLACE, STATE< ZIPCODE).
-
 
 % getStateInfo('Oxford', State, 45056). -> State = 'OH'
 % getStateInfo('Oxford', State, _). -> 
