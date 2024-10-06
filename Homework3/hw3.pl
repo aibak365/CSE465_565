@@ -73,7 +73,7 @@ elementExist(E,[Head|Tail]) :- elementExist(E,Tail).
 % Determine the reverse list of integer numbers
 % reverse(LST, REVLST).
 
-everse([], []). 
+reverse([], []). 
 reverse([Head|Tail], REVLST) :- 
     reverse(Tail, RevT), 
     append(RevT, [Head], REVLST).
