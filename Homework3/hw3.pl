@@ -156,8 +156,13 @@ getStateInfo(Place, State, Zipcode) :-
 %    about a new programming language on your own is a skil that takes
 %    practice. 
 % getCommon(STATE1, STATE2, PLACELST).
-
-
+:- consult('zipcodes.pl').
+getCommon(State1, State2, PlaceLst) :-
+    findall(Place, location(_, Place, State1, _, _, _), Places1),
+    findall(Place, location(_, Place, State2, _, _, _), Places2),
+    intersection(Places1, Places2, CommonPlaces),
+    sort(CommonPlaces, PlaceLst).
+% please note it will be turncated, so please use getCommon('OH','MI',PLACELST),write(PLACELST).
 % getCommon('OH','MI',PLACELST). -> *Should be 131 unique plcase* 
 % ['Manchester','Unionville','Athens','Saint
 % Johns','Belmont','Bellaire','Bridgeport','Lansing','Flushing','D
