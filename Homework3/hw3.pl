@@ -108,8 +108,9 @@ collectOneDigits([Head|Tail], NewLst) :-
 % Example: for getting all the Zipcodes and Sates you can do 
 %         location(Z, _, S, _, _, _). 
 % Determine all places based on given state and zipcode.
-% getStateInfo(PLACE, STATE< ZIPCODE).
-
+% getStateInfo(PLACE, STATE, ZIPCODE).
+consult('C:/Users/stand/OneDrive/Documents/CSE465_565/Homework3/zipcodes.pl').
+getStateInfo(City, State, ZipCode) :- 
 % getStateInfo('Oxford', State, 45056). -> State = 'OH'
 % getStateInfo('Oxford', State, _). -> 
 % State = 'AL' 
