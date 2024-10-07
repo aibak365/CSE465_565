@@ -206,6 +206,56 @@ getCommon(State1, State2, PlaceLst) :-
 % adjectives: yellow, big, brown, green, party
 % plural verbs: shine, continue, party, eat
 % singular verbs: shines, continues, parties, eats
+% Singular nouns
+noun_singular([sun]).
+noun_singular([bus]).
+noun_singular([deer]).
+noun_singular([grass]).
+noun_singular([party]).
+
+% Plural nouns
+noun_plural([suns]).
+noun_plural([buses]).
+noun_plural([deer]).
+noun_plural([grasses]).
+noun_plural([parties]).
+
+% Singular verbs
+verb_singular([shines]).
+verb_singular([continues]).
+verb_singular([parties]).
+verb_singular([eats]).
+
+% Plural verbs
+verb_plural([shine]).
+verb_plural([continue]).
+verb_plural([party]).
+verb_plural([eat]).
+
+% Articles
+article([a]).
+article([an]).
+article([the]).
+
+% Adjectives
+adjective([yellow]).
+adjective([big]).
+adjective([brown]).
+adjective([green]).
+adjective([party]).
+
+% Adverbs
+adverb([loudly]).
+adverb([brightly]).
+sentence(S) :- append(NP, VP, S), np(Number, NP), vp(Number, VP).
+np(Number, [ART|NP]) :- article([ART]), np2(Number, NP).
+np(Number, NP) :- np2(Number, NP).
+np2(singular, NP2) :- noun_singular(NP2).
+np2(plural, NP2) :- noun_plural(NP2).
+np2(Number, [ADJ|NP2]) :- adjective([ADJ]), np2(Number, NP2).
+vp(singular, VP) :- verb_singular(VP).
+vp(plural, VP) :- verb_plural(VP).
+vp(Number, [VERB|ADV]) :- (verb_singular([VERB]), Number = singular; verb_plural([VERB]), Number = plural), adverb(ADV).
 
 
 % sentence([the, party, bus, shines, brightly]). -> true.
