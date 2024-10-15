@@ -1,9 +1,2 @@
-For Homeworks of comperative language
-Please note that on the image of the results of file: .\prog1.zpm
-the code of Zpm+- was like this , so that the result is 4
-A = 2 ;
-B = 2 ;
-A *= B ;
-PRINT A ;
-
-Thanks in advance for hard work!
+A repositery for the comperative prgramming Language course: 565
+where we learn different paradigms of programming language such as: scheme, Prolog, C#, Prel ...etc
