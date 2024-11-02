@@ -54,6 +54,7 @@ public class Hw4
         //GenerateCommonCityNames();
         //Latton();
         //StatesOfTheCitiy();
+        // Please note that I am using appending on the grad.txt
         maxDistance();
         TheHighestPopulation();
         TheLowestPopulation();
@@ -142,9 +143,8 @@ public class Hw4
             }
         }
     }
-    // please note that i used Gemmni for this
-    
 
+    // please note that i used ChatGpt for this function
     // Haversine formula to calculate the distance between two points on the Earth
     private static double GetDistance(double lat1, double lon1, double lat2, double lon2)
     {
