@@ -217,7 +217,28 @@ public class Hw4
   }
   public static void TheLowestPopulation()
   {
-    
+    var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) 
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                int population = int.TryParse(parts[17], out var pop) ? pop : 10000; //in case any empty poulation
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    Population = population
+                };
+            })
+            .ToList();
+
+        // Find the zip code with the smallest population
+        var smallestPopulationZip = zipCodes.OrderBy(z => z.Population).FirstOrDefault();
+
+        if (smallestPopulationZip != null)
+        {
+            Console.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}, Population: {smallestPopulationZip.Population}");
+        }
   }
   
     
