@@ -55,28 +55,7 @@ public class Hw4
         //StatesOfTheCitiy();
         //maxDistance();
         //TheHighestPopulation();
-        var zipCodes = File.ReadLines("zipcodes.txt")
-            .Skip(1) // Skip the header
-            .Select(line =>
-            {
-                var parts = line.Split('\t');
-                int population = int.TryParse(parts[17], out var pop) ? pop : 10000; //in case any empty poulation
-
-                return new
-                {
-                    ZipCode = parts[1],
-                    Population = population
-                };
-            })
-            .ToList();
-
-        // Find the zip code with the smallest population
-        var smallestPopulationZip = zipCodes.OrderBy(z => z.Population).FirstOrDefault();
-
-        if (smallestPopulationZip != null)
-        {
-            Console.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}, Population: {smallestPopulationZip.Population}");
-        }
+        
         
     
 
@@ -236,5 +215,10 @@ public class Hw4
             Console.WriteLine($"ZipCode: {largestPopulationZip.ZipCode}");
         }
   }
+  public static void TheLowestPopulation()
+  {
+    
+  }
+  
     
 }
