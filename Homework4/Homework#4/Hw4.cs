@@ -54,12 +54,12 @@ public class Hw4
         //GenerateCommonCityNames();
         //Latton();
         //StatesOfTheCitiy();
-        //maxDistance();
-        //TheHighestPopulation();
-        //TheLowestPopulation();
-        //TheBigestWage();
-        //TheSmallestWage();
-       //TheLargestPopulation();
+        maxDistance();
+        TheHighestPopulation();
+        TheLowestPopulation();
+        TheBigestWage();
+        TheSmallestWage();
+       TheLargestPopulation();
         
 
         // ============================
@@ -186,11 +186,12 @@ public class Hw4
         var minLatLon = zipCodes.OrderBy(z => z.Latitude).ThenBy(z => z.Longitude).First();
         var maxLatLon = zipCodes.OrderByDescending(z => z.Latitude).ThenByDescending(z => z.Longitude).First();
 
-        // Calculate distance between the extreme points
         var maxDistance = GetDistance(minLatLon.Latitude, minLatLon.Longitude, maxLatLon.Latitude, maxLatLon.Longitude);
 
-        // Output the results
-        Console.WriteLine($"{minLatLon.ZipCode} {maxLatLon.ZipCode}");
+        using (var writer = new StreamWriter("grad.txt"))
+        {
+            writer.WriteLine($"{minLatLon.ZipCode} {maxLatLon.ZipCode}");
+        }
   }
   public static void TheHighestPopulation()
   {
@@ -213,7 +214,10 @@ public class Hw4
 
         if (largestPopulationZip != null)
         {
-            Console.WriteLine($"ZipCode: {largestPopulationZip.ZipCode}");
+            using (var writer = new StreamWriter("grad.txt", append: true))
+            {
+                writer.WriteLine($"ZipCode: {largestPopulationZip.ZipCode}");
+            }
         }
   }
   public static void TheLowestPopulation()
@@ -233,12 +237,15 @@ public class Hw4
             })
             .ToList();
 
-        // Find the zip code with the smallest population
         var smallestPopulationZip = zipCodes.OrderBy(z => z.Population).FirstOrDefault();
 
         if (smallestPopulationZip != null)
         {
-            Console.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}, Population: {smallestPopulationZip.Population}");
+            using (var writer = new StreamWriter("grad.txt", append: true))
+            {
+                writer.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}");
+            }
+
         }
   }
   public static void TheBigestWage()
@@ -248,21 +255,36 @@ public class Hw4
             .Select(line =>
             {
                 var parts = line.Split('\t');
-                double wages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wage) ? wage : 0; // in case of missing
+                int population = int.TryParse(parts[17], out var pop) ? pop : 0;
+                double totalWages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wages) ? wages : 0;
 
                 return new
                 {
                     ZipCode = parts[1],
-                    PerCapitaWages = wages
+                    Population = population,
+                    TotalWages = totalWages
                 };
             })
+            .Where(z => z.Population > 0) 
             .ToList();
 
-        var largestWagesZip = zipCodes.OrderByDescending(z => z.PerCapitaWages).FirstOrDefault();
+        var zipCodeWages = zipCodes
+            .Select(z => new
+            {
+                z.ZipCode,
+                PerCapitaWages = z.TotalWages / z.Population
+            })
+            .OrderByDescending(z => z.PerCapitaWages)
+            .FirstOrDefault();
 
-        if (largestWagesZip != null)
+        if (zipCodeWages != null)
         {
-            Console.WriteLine($"ZipCode: {largestWagesZip.ZipCode}");
+            using (var writer = new StreamWriter("grad.txt", append: true))
+            {
+                writer.WriteLine($"ZipCode: {zipCodeWages.ZipCode}");
+            }
+
+            
         }
   }
   public static void TheSmallestWage()
@@ -272,20 +294,35 @@ public class Hw4
             .Select(line =>
             {
                 var parts = line.Split('\t');
-                double wages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wage) ? wage : 10000;
+                int population = int.TryParse(parts[17], out var pop) ? pop : 0;
+                double totalWages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wages) ? wages : 1000000;
 
                 return new
                 {
                     ZipCode = parts[1],
-                    PerCapitaWages = wages
+                    Population = population,
+                    TotalWages = totalWages
                 };
             })
+            .Where(z => z.Population > 0) 
             .ToList();
-        var smallestWagesZip = zipCodes.OrderBy(z => z.PerCapitaWages).FirstOrDefault();
 
-        if (smallestWagesZip != null)
+        var zipCodeWages = zipCodes
+            .Select(z => new
+            {
+                z.ZipCode,
+                PerCapitaWages = z.TotalWages / z.Population
+            })
+            .OrderBy(z => z.PerCapitaWages)
+            .FirstOrDefault();
+
+        if (zipCodeWages != null)
         {
-            Console.WriteLine($"ZipCode: {smallestWagesZip.ZipCode}");
+            using (var writer = new StreamWriter("grad.txt", append: true))
+            {
+                writer.WriteLine($"ZipCode: {zipCodeWages.ZipCode}");
+            }
+
         }
   }
   public static void TheLargestPopulation()
@@ -313,7 +350,10 @@ public class Hw4
 
         if (cityPopulations != null)
         {
-            Console.WriteLine($"City: {cityPopulations.City}");
+            using (var writer = new StreamWriter("grad.txt", append: true))
+            {
+                writer.WriteLine($"City: {cityPopulations.City}");
+            }
         }
   }
   
