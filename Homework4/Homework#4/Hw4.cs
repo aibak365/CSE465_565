@@ -43,10 +43,11 @@ public class Hw4
         // TODO: your code goes here
         //GenerateCommonCityNames();
         //Latton();
-
+        //StatesOfTheCitiy();
         
         
-
+        
+    
 
         
 
@@ -66,6 +67,7 @@ public class Hw4
         // Display the elapsed time in milliseconds
         Console.WriteLine($"Elapsed Time: {elapsedTime.TotalMilliseconds} ms");
     }
+
     public static void GenerateCommonCityNames()
     {
       var Lines = File.ReadLines("zipcodes.txt").Select(Lines => Lines.Split('\t')); // i am using linq and lambda
@@ -99,18 +101,12 @@ public class Hw4
 
         File.WriteAllLines("LatLon.txt", latLonResults);
     }
-    public static void StatesOfTheCitiy
+    public static void StatesOfTheCitiy()
     {
       var cities = File.ReadLines("cities.txt").Select(line => line.Trim().ToLower()).ToHashSet();
-        Console.WriteLine($"Cities read from cities.txt: {cities.Count}");
 
-        foreach (var city in cities)
-        {
-            Console.WriteLine($"City from file: {city}");
-        }
-
+    
         var lines = File.ReadLines("zipcodes.txt").Skip(1).ToList();
-        Console.WriteLine($"Lines read from zipcodes.txt: {lines.Count}");
 
         var cityStates = File.ReadLines("zipcodes.txt")
             .Skip(1) 
@@ -130,12 +126,29 @@ public class Hw4
             {
                 if (cityStates.ContainsKey(city))
                 {
-                    writer.WriteLine($"{city} {string.Join(" ", cityStates[city])}");
+                    writer.WriteLine($"{string.Join(" ", cityStates[city])}");
                 }
             }
         }
     }
+    // please note that i used chatgpt for this
+    private static double GetDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double R = 6371; // Radius of Earth in kilometers
+        double dLat = ToRadians(lat2 - lat1);
+        double dLon = ToRadians(lon2 - lon1);
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        return R * c; // Distance in kilometers
+    }
 
+    private static double ToRadians(double angle)
+    {
+        return angle * (Math.PI / 180);
+    
+    }
  
 
   
