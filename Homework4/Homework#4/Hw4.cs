@@ -56,8 +56,8 @@ public class Hw4
         //maxDistance();
         //TheHighestPopulation();
         //TheLowestPopulation();
+        //TheBigestWage();
         
-    
 
         
 
@@ -238,6 +238,55 @@ public class Hw4
         if (smallestPopulationZip != null)
         {
             Console.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}, Population: {smallestPopulationZip.Population}");
+        }
+  }
+  public static void TheBigestWage()
+  {
+    var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) 
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                double wages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wage) ? wage : 0; // in case of missing
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    PerCapitaWages = wages
+                };
+            })
+            .ToList();
+
+        var largestWagesZip = zipCodes.OrderByDescending(z => z.PerCapitaWages).FirstOrDefault();
+
+        if (largestWagesZip != null)
+        {
+            Console.WriteLine($"ZipCode: {largestWagesZip.ZipCode}");
+        }
+  }
+  public static void TheSmallestWage()
+  {
+    var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) // Skip the header
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                double wages = double.TryParse(parts[18], NumberStyles.Float, CultureInfo.InvariantCulture, out var wage) ? wage : 10000;
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    PerCapitaWages = wages
+                };
+            })
+            .ToList();
+
+        // Find the zip code with the smallest per capita wages
+        var smallestWagesZip = zipCodes.OrderBy(z => z.PerCapitaWages).FirstOrDefault();
+
+        if (smallestWagesZip != null)
+        {
+            Console.WriteLine($"ZipCode: {smallestWagesZip.ZipCode}, PerCapitaWages: {smallestWagesZip.PerCapitaWages}");
         }
   }
   
