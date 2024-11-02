@@ -1,7 +1,7 @@
 /* 
   Homework#4
 
-  Add your name here: ----
+  Add your name here: Aibak Aljadayah
 
   You are free to create as many classes within the Hw4.cs file or across 
   multiple files as you need. However, ensure that the Hw4.cs file is the 
@@ -12,6 +12,7 @@
   // BONUS POINT:
   // => Used Pointers from lines 10 to 15 <=
   // => Used Pointers from lines 40 to 63 <=
+  // Please note that you can find using Lambda in any function i have while I am using it with LINQ for ex:124
   
 
 using System;
