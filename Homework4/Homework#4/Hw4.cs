@@ -280,7 +280,6 @@ public class Hw4
                 };
             })
             .ToList();
-        // used chatgpt cuz i been bored to write it again
         var smallestWagesZip = zipCodes.OrderBy(z => z.PerCapitaWages).FirstOrDefault();
 
         if (smallestWagesZip != null)
