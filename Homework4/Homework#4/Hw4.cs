@@ -57,8 +57,8 @@ public class Hw4
         //TheHighestPopulation();
         //TheLowestPopulation();
         //TheBigestWage();
-        TheSmallestWage();
-
+        //TheSmallestWage();
+       //TheLargestPopulation();
         
 
         // ============================
@@ -285,6 +285,34 @@ public class Hw4
         if (smallestWagesZip != null)
         {
             Console.WriteLine($"ZipCode: {smallestWagesZip.ZipCode}");
+        }
+  }
+  public static void TheLargestPopulation()
+  {
+     var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) 
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                int population = int.TryParse(parts[17], out var pop) ? pop : 0;
+
+                return new
+                {
+                    City = parts[3] + ", " + parts[4],
+                    Population = population
+                };
+            })
+            .ToList();
+
+        var cityPopulations = zipCodes
+            .GroupBy(z => z.City)
+            .Select(g => new { City = g.Key, TotalPopulation = g.Sum(z => z.Population) })
+            .OrderByDescending(g => g.TotalPopulation)
+            .FirstOrDefault();
+
+        if (cityPopulations != null)
+        {
+            Console.WriteLine($"City: {cityPopulations.City}");
         }
   }
   
