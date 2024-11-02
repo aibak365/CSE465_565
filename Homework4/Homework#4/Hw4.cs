@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.IO.Compression;
+using System.Globalization;
 
 public class Hw4
 {
@@ -32,9 +33,17 @@ public class Hw4
         // Main method
         // ============================
         
-        // Read the list of zip codes from zips.txt
-       
 
+      
+       
+        
+
+         
+
+        
+    
+
+    
         
 
 
@@ -44,8 +53,30 @@ public class Hw4
         //GenerateCommonCityNames();
         //Latton();
         //StatesOfTheCitiy();
-        
-        
+        //maxDistance();
+        //TheHighestPopulation();
+        var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) // Skip the header
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                int population = int.TryParse(parts[17], out var pop) ? pop : 10000; //in case any empty poulation
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    Population = population
+                };
+            })
+            .ToList();
+
+        // Find the zip code with the smallest population
+        var smallestPopulationZip = zipCodes.OrderBy(z => z.Population).FirstOrDefault();
+
+        if (smallestPopulationZip != null)
+        {
+            Console.WriteLine($"ZipCode: {smallestPopulationZip.ZipCode}, Population: {smallestPopulationZip.Population}");
+        }
         
     
 
@@ -131,7 +162,10 @@ public class Hw4
             }
         }
     }
-    // please note that i used chatgpt for this
+    // please note that i used Gemmni for this
+    
+
+    // Haversine formula to calculate the distance between two points on the Earth
     private static double GetDistance(double lat1, double lon1, double lat2, double lon2)
     {
         const double R = 6371; // Radius of Earth in kilometers
@@ -147,10 +181,60 @@ public class Hw4
     private static double ToRadians(double angle)
     {
         return angle * (Math.PI / 180);
-    
     }
- 
 
-  
+
+  public static void maxDistance()
+  {
+    var zipCodes = File.ReadLines("zipcodes.txt")
+            
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                double lat = double.TryParse(parts[6], NumberStyles.Float, CultureInfo.InvariantCulture, out var latitude) ? latitude : 0;
+                double lon = double.TryParse(parts[7], NumberStyles.Float, CultureInfo.InvariantCulture, out var longitude) ? longitude : 0;
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    Latitude = lat,
+                    Longitude = lon
+                };
+            })
+            .ToList();
+
+        var minLatLon = zipCodes.OrderBy(z => z.Latitude).ThenBy(z => z.Longitude).First();
+        var maxLatLon = zipCodes.OrderByDescending(z => z.Latitude).ThenByDescending(z => z.Longitude).First();
+
+        // Calculate distance between the extreme points
+        var maxDistance = GetDistance(minLatLon.Latitude, minLatLon.Longitude, maxLatLon.Latitude, maxLatLon.Longitude);
+
+        // Output the results
+        Console.WriteLine($"{minLatLon.ZipCode} {maxLatLon.ZipCode}");
+  }
+  public static void TheHighestPopulation()
+  {
+    var zipCodes = File.ReadLines("zipcodes.txt")
+            .Skip(1) 
+            .Select(line =>
+            {
+                var parts = line.Split('\t');
+                int population = int.TryParse(parts[17], out var pop) ? pop : 0;
+
+                return new
+                {
+                    ZipCode = parts[1],
+                    Population = population
+                };
+            })
+            .ToList();
+
+        var largestPopulationZip = zipCodes.OrderByDescending(z => z.Population).FirstOrDefault();
+
+        if (largestPopulationZip != null)
+        {
+            Console.WriteLine($"ZipCode: {largestPopulationZip.ZipCode}");
+        }
+  }
     
 }
