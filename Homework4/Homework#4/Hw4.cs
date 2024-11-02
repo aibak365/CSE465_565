@@ -57,7 +57,7 @@ public class Hw4
         //TheHighestPopulation();
         //TheLowestPopulation();
         //TheBigestWage();
-        
+        TheSmallestWage();
 
         
 
@@ -267,7 +267,7 @@ public class Hw4
   public static void TheSmallestWage()
   {
     var zipCodes = File.ReadLines("zipcodes.txt")
-            .Skip(1) // Skip the header
+            .Skip(1) 
             .Select(line =>
             {
                 var parts = line.Split('\t');
@@ -280,13 +280,12 @@ public class Hw4
                 };
             })
             .ToList();
-
-        // Find the zip code with the smallest per capita wages
+        // used chatgpt cuz i been bored to write it again
         var smallestWagesZip = zipCodes.OrderBy(z => z.PerCapitaWages).FirstOrDefault();
 
         if (smallestWagesZip != null)
         {
-            Console.WriteLine($"ZipCode: {smallestWagesZip.ZipCode}, PerCapitaWages: {smallestWagesZip.PerCapitaWages}");
+            Console.WriteLine($"ZipCode: {smallestWagesZip.ZipCode}");
         }
   }
   
