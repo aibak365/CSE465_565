@@ -55,6 +55,19 @@ if __name__ == "__main__":
             else:
                 file.write("N/A N/A\n")
 
+    city_states_df = df.groupby('City')['State'].apply(lambda x: sorted(set(x))).reset_index()
+    with open("cities.txt", 'r') as file:
+        cities = file.read().strip().upper().splitlines()
+
+    city_states_dict = dict(zip(city_states_df['City'], city_states_df['State']))
+
+    with open("CityStates.txt", 'w') as file:
+        for city in cities:
+            if city in city_states_dict:
+                states = ' '.join(city_states_dict[city])
+                file.write(f"{states}\n")
+            else:
+                file.write(f"{city}: N/A\n")
     
 
     '''
