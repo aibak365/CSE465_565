@@ -29,6 +29,15 @@ if __name__ == "__main__":
     # to read the file as panda dataframe
     df = pd.read_csv("zipcodes.txt", delimiter='\t')
 
+    with open("states.txt", 'r') as file:
+        states = file.read().strip().splitlines()
+    state_cities = {state: set(df[df['State'] == state]['City']) for state in states}
+    common_cities = set.intersection(*state_cities.values())
+    common_cities_sorted = sorted(common_cities)
+
+    with open("CommonCityNames.txt", 'w') as file:
+        for city in common_cities_sorted:
+            file.write(f"{city}\n")
     
 
     '''
