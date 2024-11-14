@@ -69,7 +69,17 @@ if __name__ == "__main__":
             else:
                 file.write(f"{city}: N/A\n")
     df = df.dropna(subset=['Lat', 'Long'])
-   
+    
+    coords = df[['Lat', 'Long']].to_numpy()
+    # please note that i used this from chatgpt cuz, the original way in my mind is so slow and heavy
+    tree = cKDTree(coords)
+
+    dist, idx = tree.query(coords, k=2, distance_upper_bound=np.inf)
+    max_dist_idx = np.argmax(dist[:, 1])
+    zip1 = df.iloc[max_dist_idx]['Zipcode']
+    zip2 = df.iloc[idx[max_dist_idx, 1]]['Zipcode']
+
+    
 
     '''
     Inside the __main__, do not add any codes after this line.
