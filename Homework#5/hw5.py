@@ -81,6 +81,9 @@ if __name__ == "__main__":
 
     largest_population_zip = df.loc[df['EstimatedPopulation'].idxmax()]['Zipcode']
 
+    smallest_population_zip = df.loc[df['EstimatedPopulation'].idxmin()]['Zipcode']
+
+    
 
     '''
     Inside the __main__, do not add any codes after this line.
