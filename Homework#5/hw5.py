@@ -79,7 +79,8 @@ if __name__ == "__main__":
     zip1 = df.iloc[max_dist_idx]['Zipcode']
     zip2 = df.iloc[idx[max_dist_idx, 1]]['Zipcode']
 
-    
+    largest_population_zip = df.loc[df['EstimatedPopulation'].idxmax()]['Zipcode']
+
 
     '''
     Inside the __main__, do not add any codes after this line.
