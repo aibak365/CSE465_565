@@ -92,6 +92,13 @@ if __name__ == "__main__":
     largest_population_city = city_population_df.loc[city_population_df['EstimatedPopulation'].idxmax()]
     largest_population_city_name = f"{largest_population_city['City']}, {largest_population_city['State']}"
 
+    with open("grad.txt", 'w') as file:
+        file.write(f"{zip1} {zip2}\n")
+        file.write(f"{largest_population_zip}\n")
+        file.write(f"{smallest_population_zip}\n")
+        file.write(f"{largest_per_capita_wages_zip}\n")
+        file.write(f"{smallest_per_capita_wages_zip}\n")
+        file.write(f"{largest_population_city_name.lower().capitalize()}\n")
 
     '''
     Inside the __main__, do not add any codes after this line.
