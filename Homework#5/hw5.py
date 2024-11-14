@@ -38,6 +38,23 @@ if __name__ == "__main__":
     with open("CommonCityNames.txt", 'w') as file:
         for city in common_cities_sorted:
             file.write(f"{city}\n")
+    with open("zips.txt", 'r') as file:
+        zips = file.read().splitlines()
+
+    zip_lat_lon = {}
+    for index, row in df.iterrows():
+        zip_code = row['Zipcode']
+        if zip_code not in zip_lat_lon:
+            zip_lat_lon[zip_code] = (row['Lat'], row['Long'])
+
+    with open("LatLon.txt", 'w') as file:
+        for zip_code in zips:
+            if int(zip_code.strip()) in zip_lat_lon:
+                lat, lon = zip_lat_lon[int(zip_code)]
+                file.write(f"{lat} {lon}\n")
+            else:
+                file.write("N/A N/A\n")
+
     
 
     '''
