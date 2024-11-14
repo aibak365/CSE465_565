@@ -83,6 +83,11 @@ if __name__ == "__main__":
 
     smallest_population_zip = df.loc[df['EstimatedPopulation'].idxmin()]['Zipcode']
 
+    df['PerCapitaWages'] = df['TotalWages'] / df['EstimatedPopulation']
+    largest_per_capita_wages_zip = df.loc[df['PerCapitaWages'].idxmax()]['Zipcode']
+
+    smallest_per_capita_wages_zip = df.loc[df['PerCapitaWages'].idxmin()]['Zipcode']
+
     
 
     '''
