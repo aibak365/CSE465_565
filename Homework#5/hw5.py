@@ -88,7 +88,10 @@ if __name__ == "__main__":
 
     smallest_per_capita_wages_zip = df.loc[df['PerCapitaWages'].idxmin()]['Zipcode']
 
-    
+    city_population_df = df.groupby(['City', 'State'])['EstimatedPopulation'].sum().reset_index()
+    largest_population_city = city_population_df.loc[city_population_df['EstimatedPopulation'].idxmax()]
+    largest_population_city_name = f"{largest_population_city['City']}, {largest_population_city['State']}"
+
 
     '''
     Inside the __main__, do not add any codes after this line.
