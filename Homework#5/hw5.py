@@ -68,7 +68,8 @@ if __name__ == "__main__":
                 file.write(f"{states}\n")
             else:
                 file.write(f"{city}: N/A\n")
-    
+    df = df.dropna(subset=['Lat', 'Long'])
+   
 
     '''
     Inside the __main__, do not add any codes after this line.
