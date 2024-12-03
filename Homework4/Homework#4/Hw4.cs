@@ -51,9 +51,9 @@ public class Hw4
 
 
         // TODO: your code goes here
-        //GenerateCommonCityNames();
-        //Latton();
-        //StatesOfTheCitiy();
+        GenerateCommonCityNames();
+        Latton();
+        StatesOfTheCitiy();
         // Please note that I am using appending on the grad.txt
         maxDistance();
         TheHighestPopulation();
