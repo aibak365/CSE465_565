@@ -17,7 +17,6 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
-        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR')
         ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
         ('STR_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # String variable (lookahead for assignment and addition)
@@ -33,7 +32,9 @@ class Interpreter:
         ('STRING',      r'"[^"]*"'),                                    # String literal, handling quotes
         ('SEMICOLON',   r'(?<=\s);'),                                   # Statement terminator
         ('WS',          r'\s+'),                                        # Whitespace
-        ('NEWLN',       r'\n'),        
+        ('NEWLN',       r'\n'),
+        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR')
+        
     )
 
     def __init__(self, file_name):
@@ -92,7 +93,6 @@ class Interpreter:
                 if value_token[0] == 'NUMBER':
                     value = int(value_token[1])
                 elif value_token[0] == 'STRING':
-
                     
                     value = value_token[1][1:-1]# getting rid of ""
                     
@@ -127,10 +127,10 @@ class Interpreter:
                     if type(self.variables[var_name]) == int: 
                         print(var_name,"=",self.variables[var_name])
                     else:
-                        # add quotes for the strings
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
+            #print(tokens)
 
     def run(self, file_name = ""):
         """
