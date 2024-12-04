@@ -65,6 +65,8 @@ class Interpreter:
                         var_name = match.group().split()[1]  
                         token = (tok_type, var_name)
                         check_if_print_there = True
+                    elif tok_type == 'FOR':
+                        print("Something")
                     elif tok_type in ['INT_VAR', 'STR_VAR'] and check_if_print_there:
                         continue
                     else:
