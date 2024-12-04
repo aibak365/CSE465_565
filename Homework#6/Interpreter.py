@@ -23,7 +23,8 @@ class Interpreter:
         ('ASSIGN',      r'(?<=\s)\=(?=\s)'),                            # Assignment operator
         ('PLUS_ASSIGN', r'(?<=\s)\+=(?=\s)'),                           # Addition assignment operator
         ('MINUS_ASSIGN',r'(?<=\s)-=(?=\s)'),                            # Subtraction assignment operator
-        ('MULT_ASSIGN', r'(?<=\s)\*=(?=\s)'),                           # Multiplication assignment operator
+        ('DIV_ASSIGN', r'(?<=\s)\\=(?=\s)'),
+        ('MULT_ASSIGN', r'(?<=\s)\*=(?=\s)'),                                                                   # Multiplication assignment operator
         ('INT_VAR_VAL', r'(?<=[\+\-\*]=)\s[a-zA-Z_][a-zA-Z_0-9]*'),     # Integer variable (lookahead for operations)
         ('STR_VAR_VAL', r'(?<=\+=)\s[a-zA-Z_][a-zA-Z_0-9]*'),           # String variable (lookahead for addition)
         ('ASS_VAL', r'(?<=\=)\s[a-zA-Z_][a-zA-Z_0-9]*'),                # variable (lookahead for assignment)
@@ -32,6 +33,7 @@ class Interpreter:
         ('SEMICOLON',   r'(?<=\s);'),                                   # Statement terminator
         ('WS',          r'\s+'),                                        # Whitespace
         ('NEWLN',       r'\n'),
+        
     )
 
     def __init__(self, file_name):
@@ -68,7 +70,6 @@ class Interpreter:
                         token = (tok_type, match.group(0).strip())  # getting the match from the line
                     tokens.append(token)  
             
-        
         return tokens
 
 
@@ -87,11 +88,12 @@ class Interpreter:
                 op_token = next(it)[1]  # Get the operator
                 value_token = next(it)  # Get the value token
                 semicolon = next(it)[1]  # Ensure semicolon
-
                 if value_token[0] == 'NUMBER':
                     value = int(value_token[1])
                 elif value_token[0] == 'STRING':
-                    value = value_token[1]# getting rid of ""
+                    
+                    value = value_token[1][1:-1]# getting rid of ""
+                    
                 else: 
                     '''
                     if it's not a numebr or string, then it's a variable, 
@@ -102,7 +104,6 @@ class Interpreter:
                     if value is None:
                         print(f"Undefined variable '{value_token[1]}' on line {self.line_number}")
                         sys.exit()
-
                 try: # for capturing the error where we add an int value to a string variable or vice versa
                     if op_token == '=':
                         self.variables[var_name] = value
@@ -112,15 +113,23 @@ class Interpreter:
                         self.variables[var_name] -= value
                     elif op_token == '*=':
                         self.variables[var_name] *= value
+                    elif op_token == '\=':
+                        self.variables[var_name] /= value
                 except Exception as e:
-                    print(f"Error in line: {self.line_number}")
+                    print(f"RUNTIME ERROR: Line {self.line_number}")
                     sys.exit()
+                
             elif token[0] == "PRINT_VAL":
                 var_name = token[1]
                 try:
-                    print(var_name,"=",self.variables[var_name])
+                    if type(self.variables[var_name]) == int: 
+                        print(var_name,"=",self.variables[var_name])
+                    else:
+                        print(var_name,"=","\""+self.variables[var_name]+"\"")
+                   
                 except:
                     print("This variable hasn't been intialized before :( line:",self.line_number)
+            #print(tokens)
 
     def run(self, file_name = ""):
         """
@@ -143,7 +152,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code1.zpm"
+    filename = "code4.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
