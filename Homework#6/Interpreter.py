@@ -17,6 +17,7 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
+        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR'),
         ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
         ('STR_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # String variable (lookahead for assignment and addition)
@@ -33,7 +34,6 @@ class Interpreter:
         ('SEMICOLON',   r'(?<=\s);'),                                   # Statement terminator
         ('WS',          r'\s+'),                                        # Whitespace
         ('NEWLN',       r'\n'),
-        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR')
         
     )
 
