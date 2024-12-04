@@ -91,7 +91,7 @@ class Interpreter:
                 if value_token[0] == 'NUMBER':
                     value = int(value_token[1])
                 elif value_token[0] == 'STRING':
-                    value = value_token[1][1:-1]  # getting rid of ""
+                    value = value_token[1]# getting rid of ""
                 else: 
                     '''
                     if it's not a numebr or string, then it's a variable, 
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code2.zpm"
+    filename = "code1.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
