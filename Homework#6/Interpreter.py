@@ -17,6 +17,7 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
+        ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
         ('STR_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # String variable (lookahead for assignment and addition)
         ('ASSIGN',      r'(?<=\s)\=(?=\s)'),                            # Assignment operator
@@ -30,7 +31,7 @@ class Interpreter:
         ('STRING',      r'"[^"]*"'),                                    # String literal, handling quotes
         ('SEMICOLON',   r'(?<=\s);'),                                   # Statement terminator
         ('WS',          r'\s+'),                                        # Whitespace
-        ('NEWLN',       r'\n')
+        ('NEWLN',       r'\n'),
     )
 
     def __init__(self, file_name):
@@ -46,18 +47,28 @@ class Interpreter:
         2- Maximal Munch (or Longest Match) Principle
         """
         tokens = []
-
+        #
         # looping through all patterns
+        check_if_print_there = False
         for tok_type, tok_regex in self.TOKEN_SPECIFICATION:
             # compiling a string pattern into its actual pattern matching
+
             regex = re.compile(tok_regex)
             # looking for a match
             match = regex.search(line)
 
             if match and tok_type != 'WS' and tok_type != 'NEWLN':  # Skip whitespace and newLine
-                    token = (tok_type, match.group(0).strip())  # getting the match from the line
-                    tokens.append(token)
-                    
+                    if tok_type == 'PRINT_VAL':
+                        var_name = match.group().split()[1]  
+                        token = (tok_type, var_name)
+                        check_if_print_there = True
+                    elif tok_type in ['INT_VAR', 'STR_VAR'] and check_if_print_there:
+                        continue
+                    else:
+                        token = (tok_type, match.group(0).strip())  # getting the match from the line
+                    tokens.append(token)  
+            
+        
         return tokens
 
 
@@ -69,7 +80,6 @@ class Interpreter:
         Just to keep things simpler.
         '''
         it = iter(tokens)
-
         for token in it:
             if token[0] in ['INT_VAR', 'STR_VAR']:
                 var_name = token[1]
@@ -105,6 +115,12 @@ class Interpreter:
                 except Exception as e:
                     print(f"Error in line: {self.line_number}")
                     sys.exit()
+            elif token[0] == "PRINT_VAL":
+                var_name = token[1]
+                try:
+                    print(var_name,"=",self.variables[var_name])
+                except:
+                    print("This variable hasn't been intialized before :( line:",self.line_number)
 
     def run(self, file_name = ""):
         """
@@ -127,10 +143,9 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "test1.zpm"
+    filename = "code2.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
     # if there is no error in the .zpm file, the next line will get printed at the end
-    print(interpreter.variables)
 

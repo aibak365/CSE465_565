@@ -1,0 +1,16 @@
+NUM1 = 1 ;
+PRINT NUM1 ;
+num1 = 1 ;
+num2 = -10 ;
+str = "" ;
+
+num1 += num2 ;
+num2 *= 2 ;
+
+str += "hello " ;
+str += "world !" ;
+num2 -= 3 ;
+num2 += -3 ;
+
+
+
