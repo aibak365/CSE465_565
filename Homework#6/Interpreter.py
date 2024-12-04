@@ -17,6 +17,7 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
+        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR')
         ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
         ('STR_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # String variable (lookahead for assignment and addition)
@@ -32,8 +33,7 @@ class Interpreter:
         ('STRING',      r'"[^"]*"'),                                    # String literal, handling quotes
         ('SEMICOLON',   r'(?<=\s);'),                                   # Statement terminator
         ('WS',          r'\s+'),                                        # Whitespace
-        ('NEWLN',       r'\n'),
-        
+        ('NEWLN',       r'\n'),        
     )
 
     def __init__(self, file_name):
@@ -70,6 +70,7 @@ class Interpreter:
                         token = (tok_type, match.group(0).strip())  # getting the match from the line
                     tokens.append(token)  
             
+        print(tokens)
         return tokens
 
 
@@ -91,6 +92,7 @@ class Interpreter:
                 if value_token[0] == 'NUMBER':
                     value = int(value_token[1])
                 elif value_token[0] == 'STRING':
+
                     
                     value = value_token[1][1:-1]# getting rid of ""
                     
@@ -125,11 +127,10 @@ class Interpreter:
                     if type(self.variables[var_name]) == int: 
                         print(var_name,"=",self.variables[var_name])
                     else:
+                        # add quotes for the strings
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
-                   
                 except:
-                    print("This variable hasn't been intialized before :( line:",self.line_number)
-            #print(tokens)
+                    print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
 
     def run(self, file_name = ""):
         """
@@ -152,7 +153,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code4.zpm"
+    filename = "code6.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
