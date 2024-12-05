@@ -9,6 +9,3 @@ PRINT NUM ;
 PRINT NAME ;
 
 NAME += A ;
-
-PRINT NUM ;
-PRINT NAME ;

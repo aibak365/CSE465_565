@@ -150,6 +150,7 @@ class Interpreter:
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
+                    sys.exit()
             
             elif token[0] == "FOR_LOOP":
                 var_name = token[1]
@@ -180,7 +181,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code2.zpm"
+    filename = "code5.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
