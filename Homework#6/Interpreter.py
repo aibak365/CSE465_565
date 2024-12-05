@@ -52,42 +52,48 @@ class Interpreter:
         tokens = []
         # looping through all patterns
         check_if_print_there = False
+        check_if_for_there = False
         for tok_type, tok_regex in self.TOKEN_SPECIFICATION:
             # compiling a string pattern into its actual pattern matching
             regex = re.compile(tok_regex)
             # looking for a ma/.;ltch
             match = regex.search(line)
-            check_if_for_there = False
+            
             if match and tok_type != 'WS' and tok_type != 'NEWLN':  # Skip whitespace and newLine
-                    if tok_type == 'PRINT_VAL':
+                    if  tok_type == 'FOR_LOOP':
+                        var_name = match.group().split(';')
+                        var_name = var_name[1:-1] # to get rid of for and endFor
+                        number_of_iterations = int(match.group().split(';')[0].split()[1])
+                        first_iterationa = match.group().split(';')[0].split()[2]+" "+match.group().split(';')[0].split()[3]
+                        if match.group().split(";")[0].split()[2] != "PRINT":
+                            first_iterationa = first_iterationa+" "+match.group().split(';')[0].split()[4]
+                        
+                        var_name = [first_iterationa+" "]+var_name
+                        var_name.append(number_of_iterations)
+                        # add ; for each one
+                        for i in range(len(var_name)-1):
+                            var_name[i] = var_name[i]+';'
+                            var_name[i] = var_name[i].strip()
+                        token = (tok_type,var_name)
+                                #print(i,inside)
+                        
+                        check_if_for_there = True
+                    elif check_if_for_there:
+                        continue
+                    elif tok_type == 'PRINT_VAL':
                         var_name = match.group().split()[1]  
+                        
                         token = (tok_type, var_name)
                         check_if_print_there = True
-                    elif tok_type == 'FOR_LOOP':
-                        var_name = match.group().split(';')
-                        
-                        var_name = var_name[1:-1] # to get rid of for and endFor
-
-                        number_of_iterations = int(match.group().split(';')[0].split()[1])
-                        first_iterationa = match.group().split(';')[0][6:]
-                        var_name.append(first_iterationa)
-                        # add ; for each one
-                        for i in range(len(var_name)):
-                            var_name[i] = var_name[i]+';'
-                        for i in range(number_of_iterations):
-                            for inside in var_name:
-                                self.lexical_analysis(inside.strip())
-                                #print(i,inside)
-                        check_if_for_there = True
+                    
 
                     elif tok_type in ['INT_VAR', 'STR_VAR'] and (check_if_print_there or check_if_for_there):
                         continue
                     else:
                         token = (tok_type, match.group(0).strip())  # getting the match from the line
-                    if not check_if_for_there:
-                        tokens.append(token)  
+                    
+                    tokens.append(token)  
             
-        
         return tokens
 
 
@@ -120,6 +126,7 @@ class Interpreter:
                     if value is None:
                         print(f"Undefined variable '{value_token[1]}' on line {self.line_number}")
                         sys.exit()
+                
                 try: # for capturing the error where we add an int value to a string variable or vice versa
                     if op_token == '=':
                         self.variables[var_name] = value
@@ -138,12 +145,23 @@ class Interpreter:
             elif token[0] == "PRINT_VAL":
                 var_name = token[1]
                 try:
-                    if type(self.variables[var_name]) == int: 
+                    if type(self.variables[var_name]) != str: 
                         print(var_name,"=",self.variables[var_name])
                     else:
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
+                    
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
+            elif token[0] == "FOR_LOOP":
+                
+                var_name = token[1]
+                for i in range(var_name[-1]):
+                    for e in range(len(var_name)-1):
+                        
+                        tokens = self.lexical_analysis(var_name[e])
+                        
+                        self.parse(tokens)
+
             #print(tokens)
             
 
@@ -158,6 +176,7 @@ class Interpreter:
         with open(file_name, 'r') as file:
             for line in file:
                 self.line_number += 1
+                print(line)
                 tokens = self.lexical_analysis(line)
                 self.parse(tokens)
 
