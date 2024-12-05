@@ -64,9 +64,8 @@ class Interpreter:
                         var_name = match.group().split(';')
                         var_name = var_name[1:-1] # to get rid of for and endFor
                         number_of_iterations = int(match.group().split(';')[0].split()[1])
-                        first_iterationa = match.group().split(';')[0].split()[2]+" "+match.group().split(';')[0].split()[3]
-                        if match.group().split(";")[0].split()[2] != "PRINT":
-                            first_iterationa = first_iterationa+" "+match.group().split(';')[0].split()[4]
+                        first_iterationa = match.group().split(';')[0]
+                        first_iterationa = first_iterationa.split("FOR")[1]
                         
                         var_name = [first_iterationa+" "]+var_name
                         var_name.append(number_of_iterations)
@@ -131,7 +130,8 @@ class Interpreter:
                     if op_token == '=':
                         self.variables[var_name] = value
                     elif op_token == '+=':
-                        self.variables[var_name] += value
+                            
+                            self.variables[var_name] += value
                     elif op_token == '-=':
                         self.variables[var_name] -= value
                     elif op_token == '*=':
@@ -140,7 +140,6 @@ class Interpreter:
                         self.variables[var_name] /= value
                 except Exception as e:
                     print(f"RUNTIME ERROR: Line {self.line_number}")
-                    sys.exit()
                 
             elif token[0] == "PRINT_VAL":
                 var_name = token[1]
@@ -150,16 +149,13 @@ class Interpreter:
                     else:
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
-                    
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
+            
             elif token[0] == "FOR_LOOP":
-                
                 var_name = token[1]
                 for i in range(var_name[-1]):
                     for e in range(len(var_name)-1):
-                        
                         tokens = self.lexical_analysis(var_name[e])
-                        
                         self.parse(tokens)
 
             #print(tokens)
@@ -176,7 +172,6 @@ class Interpreter:
         with open(file_name, 'r') as file:
             for line in file:
                 self.line_number += 1
-                print(line)
                 tokens = self.lexical_analysis(line)
                 self.parse(tokens)
 
@@ -185,7 +180,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code6.zpm"
+    filename = "code2.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
