@@ -17,15 +17,15 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
-        ('FOR', r'FOR\s+\d+\s+((?:[a-zA-Z_][a-zA-Z_0-9]*\s*(?:\+=|-=|\*=|\\=|\=)\s*(?:-?\d+|".*?"|[a-zA-Z_][a-zA-Z_0-9]*)\s*;\s*)+)\s*ENDFOR'),
+        ('FOR_LOOP', r'FOR.*?ENDFOR'),
         ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
         ('STR_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # String variable (lookahead for assignment and addition)
         ('ASSIGN',      r'(?<=\s)\=(?=\s)'),                            # Assignment operator
         ('PLUS_ASSIGN', r'(?<=\s)\+=(?=\s)'),                           # Addition assignment operator
         ('MINUS_ASSIGN',r'(?<=\s)-=(?=\s)'),                            # Subtraction assignment operator
-        ('DIV_ASSIGN', r'(?<=\s)\\=(?=\s)'),
-        ('MULT_ASSIGN', r'(?<=\s)\*=(?=\s)'),                                                                   # Multiplication assignment operator
+        ('DIV_ASSIGN', r'(?<=\s)\\=(?=\s)'),                            # Division assignment operator
+        ('MULT_ASSIGN', r'(?<=\s)\*=(?=\s)'),                           # Multiplication assignment operator
         ('INT_VAR_VAL', r'(?<=[\+\-\*]=)\s[a-zA-Z_][a-zA-Z_0-9]*'),     # Integer variable (lookahead for operations)
         ('STR_VAR_VAL', r'(?<=\+=)\s[a-zA-Z_][a-zA-Z_0-9]*'),           # String variable (lookahead for addition)
         ('ASS_VAL', r'(?<=\=)\s[a-zA-Z_][a-zA-Z_0-9]*'),                # variable (lookahead for assignment)
@@ -50,30 +50,44 @@ class Interpreter:
         2- Maximal Munch (or Longest Match) Principle
         """
         tokens = []
-        #
         # looping through all patterns
         check_if_print_there = False
         for tok_type, tok_regex in self.TOKEN_SPECIFICATION:
             # compiling a string pattern into its actual pattern matching
-
             regex = re.compile(tok_regex)
-            # looking for a match
+            # looking for a ma/.;ltch
             match = regex.search(line)
-
+            check_if_for_there = False
             if match and tok_type != 'WS' and tok_type != 'NEWLN':  # Skip whitespace and newLine
                     if tok_type == 'PRINT_VAL':
                         var_name = match.group().split()[1]  
                         token = (tok_type, var_name)
                         check_if_print_there = True
-                    elif tok_type == 'FOR':
-                        print("Something")
-                    elif tok_type in ['INT_VAR', 'STR_VAR'] and check_if_print_there:
+                    elif tok_type == 'FOR_LOOP':
+                        var_name = match.group().split(';')
+                        
+                        var_name = var_name[1:-1] # to get rid of for and endFor
+
+                        number_of_iterations = int(match.group().split(';')[0].split()[1])
+                        first_iterationa = match.group().split(';')[0][6:]
+                        var_name.append(first_iterationa)
+                        # add ; for each one
+                        for i in range(len(var_name)):
+                            var_name[i] = var_name[i]+';'
+                        for i in range(number_of_iterations):
+                            for inside in var_name:
+                                self.lexical_analysis(inside.strip())
+                                #print(i,inside)
+                        check_if_for_there = True
+
+                    elif tok_type in ['INT_VAR', 'STR_VAR'] and (check_if_print_there or check_if_for_there):
                         continue
                     else:
                         token = (tok_type, match.group(0).strip())  # getting the match from the line
-                    tokens.append(token)  
+                    if not check_if_for_there:
+                        tokens.append(token)  
             
-        print(tokens)
+        
         return tokens
 
 
@@ -95,9 +109,7 @@ class Interpreter:
                 if value_token[0] == 'NUMBER':
                     value = int(value_token[1])
                 elif value_token[0] == 'STRING':
-                    
-                    value = value_token[1][1:-1]# getting rid of ""
-                    
+                    value = value_token[1][1:-1]# getting rid of ""                    
                 else: 
                     '''
                     if it's not a numebr or string, then it's a variable, 
@@ -133,6 +145,8 @@ class Interpreter:
                 except:
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
             #print(tokens)
+            
+
 
     def run(self, file_name = ""):
         """
@@ -140,13 +154,10 @@ class Interpreter:
         """
         if file_name == "":
             file_name = self.file_name
-
         self.line_number = 0
-
         with open(file_name, 'r') as file:
             for line in file:
                 self.line_number += 1
-
                 tokens = self.lexical_analysis(line)
                 self.parse(tokens)
 

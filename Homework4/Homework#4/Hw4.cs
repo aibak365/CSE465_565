@@ -33,23 +33,6 @@ public class Hw4
         // Do not add or change anything above, inside the 
         // Main method
         // ============================
-        
-
-      
-       
-        
-
-         
-
-        
-    
-
-    
-        
-
-
-
-
         // TODO: your code goes here
         GenerateCommonCityNames();
         Latton();
@@ -82,7 +65,14 @@ public class Hw4
 
     public static void GenerateCommonCityNames()
     {
-      var Lines = File.ReadLines("zipcodes.txt").Select(Lines => Lines.Split('\t')); // i am using linq and lambda
+        // the issue is because I tried to override Lines while it be, but i rly don't know when i used it before wired
+        // Don't forget that in github i can show that the results are appeared and everything looks fine, but forgot why I added this line, and why is not working
+        //https://github.com/aibak365/CSE465_565/tree/main/Homework4/Homework%234 my github link 
+        // Don't forget to mentioned that i made a push yesterday here is the link https://github.com/aibak365/CSE465_565/commit/762a68bfbc2753d895fefda890b2a131d1491605
+        // the only change was uncomments and comments lines of code and we can see it on this section Homework4/Homework#4/Hw4.cs on the commit, did that cuz maybe it was issue related to commiting my code
+        //
+        //
+      //var Lines = File.ReadLines("zipcodes.txt").Select(Lines => Lines.Split('\t')); // i am using linq and lambda 
         var states = new HashSet<string>(File.ReadLines("states.txt").Select(line => line.Trim()));
 
         var cityCounts = File.ReadLines("zipcodes.txt")
