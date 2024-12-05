@@ -64,11 +64,13 @@ class Interpreter:
                         var_name = match.group().split(';')
                         var_name = var_name[1:-1] # to get rid of for and endFor
                         number_of_iterations = int(match.group().split(';')[0].split()[1])
-                        first_iterationa = match.group().split(';')[0]
-                        first_iterationa = first_iterationa.split("FOR")[1]
                         
+                        first_iterationa = match.group().split(';')[0]
+                        first_iterationa = first_iterationa.split("FOR")[1].strip()
+                        first_iterationa = first_iterationa[2:]
                         var_name = [first_iterationa+" "]+var_name
                         var_name.append(number_of_iterations)
+                        
                         # add ; for each one
                         for i in range(len(var_name)-1):
                             var_name[i] = var_name[i]+';'
@@ -97,6 +99,7 @@ class Interpreter:
 
 
     def parse(self, tokens):
+        print(tokens)
         '''
         Usually in parsisng phase, the tokens are checked and then a data structure (usually a tree)
         will be constructed from tokens that will be send to another method, and that method actually
@@ -130,7 +133,6 @@ class Interpreter:
                     if op_token == '=':
                         self.variables[var_name] = value
                     elif op_token == '+=':
-                            
                             self.variables[var_name] += value
                     elif op_token == '-=':
                         self.variables[var_name] -= value
@@ -139,6 +141,7 @@ class Interpreter:
                     elif op_token == '\=':
                         self.variables[var_name] /= value
                 except Exception as e:
+                    print(self.variables)
                     print(f"RUNTIME ERROR: Line {self.line_number}")
                 
             elif token[0] == "PRINT_VAL":
@@ -149,6 +152,7 @@ class Interpreter:
                     else:
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
+                    print(self.variables)
                     print(f"RUNTIME ERROR: Line {self.line_number} This variable hasn't been intialized before :(")
                     sys.exit()
             
@@ -181,7 +185,7 @@ if __name__ == "__main__":
     
     #filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code5.zpm"
+    filename = "code7.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()

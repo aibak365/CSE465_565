@@ -1,5 +1,5 @@
 STR = "A" ;
-FOR 5 STR += " " ; STR += "a" ; PRINT A ; ENDFOR
+FOR 5 STR += " " ; STR += "a" ; PRINT STR ; ENDFOR
 
 A = 0 ;
 FOR 2 A += 2 ; FOR 2 A += 2 ; PRINT A ; ENDFOR A -= 2 ; ENDFOR
