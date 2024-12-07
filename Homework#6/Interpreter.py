@@ -17,6 +17,7 @@ class Interpreter:
 
     # Class attribute for token specifications accessible to all instances
     TOKEN_SPECIFICATION = (
+        ('NESTED_LOOP', r'FOR.*?(FOR.*?ENDFOR.*?)*ENDFOR'),
         ('FOR_LOOP', r'FOR.*?ENDFOR'),
         ('PRINT_VAL',   r'PRINT\s[a-zA-Z_][a-zA-Z_0-9]*'),
         ('INT_VAR',     r'[a-zA-Z_][a-zA-Z_0-9]*\s'),                   # Integer variable (lookahead for assignment and operations)
@@ -53,6 +54,7 @@ class Interpreter:
         # looping through all patterns
         check_if_print_there = False
         check_if_for_there = False
+        check_if_for_nested_there = False
         for tok_type, tok_regex in self.TOKEN_SPECIFICATION:
             # compiling a string pattern into its actual pattern matching
             regex = re.compile(tok_regex)
@@ -60,7 +62,23 @@ class Interpreter:
             match = regex.search(line)
             
             if match and tok_type != 'WS' and tok_type != 'NEWLN':  # Skip whitespace and newLine
-                    if  tok_type == 'FOR_LOOP':
+                    if tok_type == "NESTED_LOOP" and match.group().count("FOR") == 4:
+                        
+                        var_name = match.group()
+                        number_of_iterations = int(var_name[4:5])
+                        index_nested_for = var_name.index("FOR",1)
+                        all_before_nested = var_name[6:index_nested_for]
+                        index_endfor_nested = var_name.index("ENDFOR")
+                        nested_loop = var_name[index_nested_for:index_endfor_nested+7]
+                        all_after_nested = var_name[index_endfor_nested+7:]
+                        all_after_nested = all_after_nested.split("ENDFOR")[0]
+                        tmp = [all_before_nested,nested_loop,all_after_nested]
+                        tmp.append(number_of_iterations)
+                        token = (tok_type, tmp)
+                        check_if_for_nested_there = True
+                    elif check_if_for_nested_there or tok_type == "NESTED_LOOP":
+                        continue
+                    elif  tok_type == 'FOR_LOOP':
                         var_name = match.group().split(';')
                         var_name = var_name[1:-1] # to get rid of for and endFor
                         number_of_iterations = int(match.group().split(';')[0].split()[1])
@@ -99,7 +117,6 @@ class Interpreter:
 
 
     def parse(self, tokens):
-        print(tokens)
         '''
         Usually in parsisng phase, the tokens are checked and then a data structure (usually a tree)
         will be constructed from tokens that will be send to another method, and that method actually
@@ -124,6 +141,7 @@ class Interpreter:
                     then it's one of INT_VAR_VAL or STR_VAR_VAL or ASS_VAL
                     so let's get the value of that variable. 
                     '''
+                    print(token)
                     value = self.variables[value_token[1]]
                     if value is None:
                         print(f"Undefined variable '{value_token[1]}' on line {self.line_number}")
@@ -141,7 +159,6 @@ class Interpreter:
                     elif op_token == '\=':
                         self.variables[var_name] /= value
                 except Exception as e:
-                    print(self.variables)
                     print(f"RUNTIME ERROR: Line {self.line_number}")
                 
             elif token[0] == "PRINT_VAL":
@@ -162,6 +179,15 @@ class Interpreter:
                     for e in range(len(var_name)-1):
                         tokens = self.lexical_analysis(var_name[e])
                         self.parse(tokens)
+            elif token[0] == "NESTED_LOOP":
+                var_name = token[1]
+                for o in range(var_name[-1]):
+                    for i in range(len(var_name)-1):
+                        if len(var_name[i]) > 0:
+                            tokens = self.lexical_analysis(var_name[i].strip())
+                            self.parse(tokens)
+            
+                
 
             #print(tokens)
             

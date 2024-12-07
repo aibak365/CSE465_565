@@ -6,9 +6,9 @@ FOR 2 A += 2 ; FOR 2 A += 2 ; PRINT A ; ENDFOR A -= 2 ; ENDFOR
 PRINT A ;
 
 A = 1 ;
-FOR 2 A += 2 ; FOR 10 A += 2 ; A -= 2 ; A *= 5 ; A /= 5 ; ENDFOR ENDFOR
+FOR 2 A += 2 ; FOR 10 A += 2 ; A -= 2 ; A *= 5 ; A \= 5 ; ENDFOR ENDFOR
 PRINT A ;
 
 A = 1 ;
-FOR 2 FOR 10 A += 2 ; A -= 2 ; A *= 5 ; A /= 5 ; ENDFOR A += 300 ; ENDFOR
+FOR 2 FOR 10 A += 2 ; A -= 2 ; A *= 5 ; A \= 5 ; ENDFOR A += 300 ; ENDFOR
 PRINT A ;
