@@ -141,7 +141,6 @@ class Interpreter:
                     then it's one of INT_VAR_VAL or STR_VAR_VAL or ASS_VAL
                     so let's get the value of that variable. 
                     '''
-                    print(token)
                     value = self.variables[value_token[1]]
                     if value is None:
                         print(f"Undefined variable '{value_token[1]}' on line {self.line_number}")
@@ -160,6 +159,7 @@ class Interpreter:
                         self.variables[var_name] /= value
                 except Exception as e:
                     print(f"RUNTIME ERROR: Line {self.line_number}")
+                    sys.exit()
                 
             elif token[0] == "PRINT_VAL":
                 var_name = token[1]
@@ -209,9 +209,9 @@ class Interpreter:
 if __name__ == "__main__":
      # The second argument in sys.argv is expected to be the filename
     
-    #filename = sys.argv[1]  # for getting the filename from command line
+    filename = sys.argv[1]  # for getting the filename from command line
     #OR
-    filename = "code7.zpm"
+    #filename = "code1.zpm"
 
     interpreter = Interpreter(filename);
     interpreter.run()
