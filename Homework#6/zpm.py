@@ -165,7 +165,7 @@ class Interpreter:
                 var_name = token[1]
                 try:
                     if type(self.variables[var_name]) != str: 
-                        print(var_name,"=",self.variables[var_name])
+                        print(var_name,"=",int(self.variables[var_name])) # add casting here to integer
                     else:
                         print(var_name,"=","\""+self.variables[var_name]+"\"")
                 except:
